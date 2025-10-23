@@ -74,7 +74,11 @@ def process_image(your_model, image, video, source_age, target_age=0,
         new_height = height if height % 2 == 0 else height - 1
         image.resize((new_width, new_height, depth))
 
-    fl = face_recognition.face_locations(image)[0]
+    faces = face_recognition.face_locations(image)
+    if not faces:
+        print("⚠️ No face detected in this frame, skipping...", flush=True)
+        return image
+    fl = faces[0] 
 
     # calculate margins
     margin_y_t = int((fl[2] - fl[0]) * .63 * .85)  # larger as the forehead is often cut off
